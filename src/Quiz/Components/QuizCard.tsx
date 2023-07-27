@@ -6,10 +6,11 @@ import {
   Typography,
   Alert,
   notification,
+  Space,
+  Row,
+  Col,
 } from "antd";
-import result from "antd/es/result";
-import React, { useEffect, useState } from "react";
-import { fetchQuestions } from "../../Adapter/FetchQuestions";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Question } from "../../App";
 import QuizResult from "./QuizResult";
 const { Title } = Typography;
@@ -20,11 +21,12 @@ interface LayoutProps {
 }
 const QuizCard = (props: LayoutProps) => {
   const { questions, currentQuestion, setCurrentQuestion } = props;
+  const {Paragraph} = Typography
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [result, setResult] = useState(false);
-  const [timer, setTimer] = useState<number>(30); // 60 seconds (1 minute)
+  const [timer, setTimer] = useState<number>(30);
 
   useEffect(() => {
     let timerId: any;
@@ -35,8 +37,8 @@ const QuizCard = (props: LayoutProps) => {
             return prevTimer - 1;
           } else {
             if (currentQuestionIndex !== questions.length - 1) {
-              handleNextQuestion(false);
-              return 30; // Reset timer to 60 seconds for the next question
+               handleNextQuestion(false);
+              return 30;
             } else {
               setResult(true);
               return 0;
@@ -45,22 +47,22 @@ const QuizCard = (props: LayoutProps) => {
         });
       }, 1000);
     }
-
-    return () => clearInterval(timerId); // Clean up the timer on component unmount
-  }, [currentQuestionIndex]);
+    return () => clearInterval(timerId);
+  }, [currentQuestion]);
 
   useEffect(() => {
     {
       timer === 10 && openNotificationWithIcon("info");
     }
   }, [timer]);
+
   const handleAnswerSelect = (e: RadioChangeEvent) => {
     setSelectedAnswer(e.target.value);
   };
 
   const handleNextQuestion = (click: boolean) => {
     if (!click && selectedAnswer === null) {
-      openNotificationWithIcon("warning");
+      openNotificationWithIcon("warning")
     }
     if (
       currentQuestion &&
@@ -71,9 +73,10 @@ const QuizCard = (props: LayoutProps) => {
 
     setSelectedAnswer(null);
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-    setCurrentQuestion(questions[currentQuestionIndex + 1]);
-    setTimer(30); // Reset timer to 60 seconds for the next question
+   setCurrentQuestion(questions[currentQuestionIndex + 1]);
+   setTimer(30); 
   };
+
   const [api, contextHolder] = notification.useNotification();
   type NotificationType = "success" | "info" | "warning" | "error";
 
@@ -87,7 +90,7 @@ const QuizCard = (props: LayoutProps) => {
     if (type === "warning") {
       api.warning({
         message: "TimeOut",
-        description: "time is up we moved to next question",
+        description: "Time is up we moved to next question",
       });
     }
   };
@@ -102,13 +105,24 @@ const QuizCard = (props: LayoutProps) => {
             title={`Question ${currentQuestionIndex + 1}`}
             className="quiz-card"
           >
-            <p>{currentQuestion.question}</p>
-            <Radio.Group onChange={handleAnswerSelect} value={selectedAnswer}>
-              {currentQuestion.choices.map((option) => (
-                <Radio key={option} value={option}>
-                  {option}
+            <Paragraph >{currentQuestion.question}</Paragraph>
+            <Radio.Group onChange={handleAnswerSelect} value={selectedAnswer} style={{width: "100%"}}>
+            
+              {currentQuestion.choices.map((option, i) => (
+               i % 2 === 0 && <Row gutter={[8, 8]} style={{marginBottom: 8}}>
+                  <Col span={12}>
+                <Radio key={currentQuestion.choices[(i+1) -1]} value={currentQuestion.choices[(i+1) -1]}>
+                  {currentQuestion.choices[(i+1) -1]}
                 </Radio>
+                </Col>
+                 <Col span={12}>
+                <Radio key={currentQuestion.choices[(i) +1]} value={currentQuestion.choices[(i) +1]}>
+                  {currentQuestion.choices[(i) +1]}
+                </Radio>
+                </Col>
+                </Row>
               ))}
+              
             </Radio.Group>
           </Card>
           {timer <= 20 && (

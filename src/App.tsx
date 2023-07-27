@@ -23,10 +23,10 @@ const App = () => {
   return (
     <Layout>
       <Header className="header">
-        <Title level={2}>Quiz App</Title>
+        <Title level={2} style={{color: "white"}}>Quiz App</Title>
       </Header>
       <ContentSection/>
-      <Footer className="footer">Quiz App ©2023 Created by You</Footer>
+      <Footer className="footer">Quiz App ©2023 Created by SudharshanTanakala</Footer>
     </Layout>
   );
 };

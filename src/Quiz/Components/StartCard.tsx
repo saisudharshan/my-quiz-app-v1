@@ -12,9 +12,9 @@ const StartCard = (props: LayoutProps) => {
         title="Start Quiz by Selecting no of Question"
         extra={[
           <Select defaultValue={5} value={props.value} onChange={(e: number) => props.setValue(e) } style={{ width: 120 }}>
-            <Select.Option value={5}> 5</Select.Option>
-            <Select.Option value={10}>10</Select.Option>
-            <Select.Option value={20}>20</Select.Option>
+            <Select.Option value={5}> 5 Questions</Select.Option>
+            <Select.Option value={10}>10 Questions</Select.Option>
+            <Select.Option value={20}>20 Questions</Select.Option>
           </Select>,
         ]}
       />
