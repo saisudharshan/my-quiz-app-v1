@@ -37,6 +37,7 @@ const QuizCard = (props: LayoutProps) => {
             return prevTimer - 1;
           } else {
             if (currentQuestionIndex !== questions.length - 1) {
+              console.log(selectedAnswer, "selectedAnswer")
                handleNextQuestion(false);
               return 30;
             } else {
@@ -48,7 +49,7 @@ const QuizCard = (props: LayoutProps) => {
       }, 1000);
     }
     return () => clearInterval(timerId);
-  }, [currentQuestion]);
+  }, [currentQuestion, selectedAnswer]);
 
   useEffect(() => {
     {
@@ -58,9 +59,10 @@ const QuizCard = (props: LayoutProps) => {
 
   const handleAnswerSelect = (e: RadioChangeEvent) => {
     setSelectedAnswer(e.target.value);
-  };
-
+  }
+  console.log(selectedAnswer, currentQuestion, "sele")
   const handleNextQuestion = (click: boolean) => {
+    console.log(selectedAnswer, currentQuestion, "sele")
     if (!click && selectedAnswer === null) {
       openNotificationWithIcon("warning")
     }
